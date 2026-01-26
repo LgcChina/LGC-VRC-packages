@@ -3,11 +3,11 @@
     "id":"com.vrchat.example-listing",
     "url":"https://vrchat-community.github.io/template-package-listing/index.json",
     "author":{
-        "email":"developer@vrchat.com",
-        "name":"VRChat",
-        "url":"https://hello.vrchat.com"
+        "email":"none",
+        "name":"LgcChina",
+        "url":"https://github.com/LgcChina"
     },
-    "description":"Example listing of VRChat packages",
+    "description":"我在学习做一些包发布",
     "infoLink":{
         "url":"http://github.com/vrchat-community/template-package-listing",
         "text":"View on GitHub"
@@ -18,9 +18,9 @@
     ],
     "packages":[
         {
-            "name":"com.vrchat.udonsharp",
+            "name":"com.lgc.renametool",
             "releases":[
-                "https://github.com/vrchat-community/UdonSharp/releases/download/1.1.7/com.vrchat.UdonSharp.zip",
+                "https://github.com/LgcChina/tools/releases/download/v1.0.0/LGCSuffixTool.zip",
             ]
         }
     ]
