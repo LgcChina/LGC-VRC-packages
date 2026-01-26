@@ -1,7 +1,7 @@
 {
     "name":"LGC Listing",
     "id":"com.vrchat.example-listing",
-    "url":"https://vrchat-community.github.io/template-package-listing/index.json",
+    "url":"https://github.com/LgcChina/LGC-VRC-packages/index.json",
     "author":{
         "email":"none",
         "name":"LgcChina",
