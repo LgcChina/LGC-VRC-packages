@@ -112,17 +112,20 @@ const setTheme = () => {
   rowMenuButtons.forEach(button => {
     button.addEventListener('click', e => {
       if (rowMoreMenu?.hidden) {
-        rowMoreMenu.style.top = `${e.clientY + e.target.clientHeight}px`;
-        rowMoreMenu.style.left = `${e.clientX - 120}px`;
+        // Fix: Use getBoundingClientRect() to get correct position accounting for scroll
+        const rect = e.target.getBoundingClientRect();
+        rowMoreMenu.style.top = `${rect.bottom + window.scrollY}px`;
+        rowMoreMenu.style.left = `${rect.left + window.scrollX - 120}px`;
         rowMoreMenu.hidden = false;
 
         const downloadLink = rowMoreMenu.querySelector('#rowMoreMenuDownload');
         const downloadListener = () => {
           window.open(e?.target?.dataset?.packageUrl, '_blank');
         }
-        downloadLink.addEventListener('change', () => {
+        // Fix: Changed from 'change' to 'click' event
+        downloadLink.addEventListener('click', () => {
           downloadListener();
-          downloadLink.removeEventListener('change', downloadListener);
+          downloadLink.removeEventListener('click', downloadListener);
         });
 
         setTimeout(() => {
