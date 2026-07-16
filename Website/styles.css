@@ -141,6 +141,8 @@ body {
   padding: 0;
   min-height: 100vh;
   background: linear-gradient(to top, #000, rgba(0,0,0,0.6)), radial-gradient(circle at top, #fff, #333);
+  /* 手机端允许横向滚动，保持桌面版布局 */
+  overflow-x: auto;
 }
 
 /* 通用工具类 */
@@ -160,6 +162,8 @@ body {
   width: 100%;
   margin: 0 auto;
   padding: 20px;
+  /* 手机端保持桌面宽度，防止内容被压缩 */
+  min-width: 1000px;
 }
 .align-items-center {
   align-items: center;
@@ -189,13 +193,15 @@ h1 {
   color: var(--text-secondary);
 }
 
-/* 包列表样式 */
+/* ===== 包列表样式（支持横向滚动，保持桌面布局） ===== */
 .packages {
   margin: 0.5rem 0 1rem 0;
-  max-width: 90%;
+  max-width: 100%;
   padding: 0.25rem;
   display: flex;
   flex: 1;
+  /* 手机端允许横向滚动 */
+  overflow-x: auto;
 }
 #packageGrid {
   overflow-y: auto;
@@ -206,6 +212,8 @@ h1 {
   border-radius: 12px;
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
+  /* 保持桌面列宽，手机端可横向滚动查看 */
+  min-width: 700px;
 }
 .packages .packageName {
   font-size: 1.1rem;
@@ -217,7 +225,7 @@ h1 {
 .searchBlock {
   margin-top: 1rem;
   width: 100%;
-  max-width: 90%;
+  max-width: 100%;
 }
 .searchBlock .root {
   width: 100%;
@@ -415,41 +423,4 @@ fluent-tooltip {
   padding: 20px;
   border: 1px solid var(--glass-border);
   box-shadow: var(--glass-shadow);
-}
-
-/* ===== 移动端适配（新增） ===== */
-@media (max-width: 768px) {
-  .content {
-    padding: 10px;
-  }
-
-  h1 {
-    font-size: 1.8rem;
-  }
-
-  .addToVccBlock {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-
-  .packages {
-    max-width: 100%;
-    overflow-x: auto;
-  }
-
-  #packageGrid {
-    min-width: 700px;
-  }
-
-  .dialog-box {
-    width: 95%;
-    max-height: 85vh;
-    padding: 15px;
-    word-break: break-word;
-  }
-
-  .bannerImage {
-    max-width: 100%;
-  }
 }
