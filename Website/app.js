@@ -39,21 +39,22 @@ const setTheme = () => {};
     console.warn('Theme initialization skipped:', err);
   }
 
+  // 弹窗控制函数（操作 hidden）
   function openDialog(dialog) {
     if (!dialog) return;
-    document.querySelectorAll('fluent-dialog').forEach(d => {
-      if (d !== dialog && d.open) {
-        d.open = false;
-      }
+    // 关闭所有弹窗
+    document.querySelectorAll('.dialog-overlay').forEach(d => {
+      if (d !== dialog) d.hidden = true;
     });
-    dialog.open = true;
+    dialog.hidden = false;
   }
 
   function closeDialog(dialog) {
     if (!dialog) return;
-    dialog.open = false;
+    dialog.hidden = true;
   }
 
+  // 获取元素
   const packageGrid = document.getElementById('packageGrid');
   const searchInput = document.getElementById('searchInput');
   const urlBarHelpButton = document.getElementById('urlBarHelp');
@@ -67,17 +68,18 @@ const setTheme = () => {};
   const packageInfoModalClose = document.getElementById('packageInfoModalClose');
   const packageInfoListingHelp = document.getElementById('packageInfoListingHelp');
 
+  // Tooltip 绑定
   const publishedByTooltip = document.getElementById('publishedByTooltip');
   const publishedByText = document.getElementById('publishedByText');
   if (publishedByTooltip && publishedByText) {
     publishedByTooltip.anchorElement = publishedByText;
   }
-
   const packageInfoListingTooltip = document.getElementById('packageInfoListingTooltip');
   if (packageInfoListingTooltip && packageInfoListingHelp) {
     packageInfoListingTooltip.anchorElement = packageInfoListingHelp;
   }
 
+  // 搜索
   if (searchInput && packageGrid) {
     searchInput.addEventListener('input', ({ target: { value = '' } }) => {
       const items = packageGrid.querySelectorAll('fluent-data-grid-row[row-type="default"]');
@@ -98,18 +100,15 @@ const setTheme = () => {};
     });
   }
 
+  // 帮助按钮
   if (urlBarHelpButton && addListingToVccHelp) {
-    urlBarHelpButton.addEventListener('click', () => {
-      openDialog(addListingToVccHelp);
-    });
+    urlBarHelpButton.addEventListener('click', () => openDialog(addListingToVccHelp));
   }
-
   if (addListingToVccHelpClose && addListingToVccHelp) {
-    addListingToVccHelpClose.addEventListener('click', () => {
-      closeDialog(addListingToVccHelp);
-    });
+    addListingToVccHelpClose.addEventListener('click', () => closeDialog(addListingToVccHelp));
   }
 
+  // 复制按钮
   if (vccListingInfoUrlFieldCopy) {
     vccListingInfoUrlFieldCopy.addEventListener('click', () => {
       const vccUrlField = document.getElementById('vccListingInfoUrlField');
@@ -123,13 +122,11 @@ const setTheme = () => {};
       }
     });
   }
-
   if (vccAddRepoButton) {
     vccAddRepoButton.addEventListener('click', () =>
       window.location.assign(`vcc://vpm/addRepo?url=${encodeURIComponent(LISTING_URL)}`)
     );
   }
-
   if (vccUrlFieldCopy) {
     vccUrlFieldCopy.addEventListener('click', () => {
       const vccUrlField = document.getElementById('vccUrlField');
@@ -144,32 +141,26 @@ const setTheme = () => {};
     });
   }
 
+  // rowMoreMenu
   const hideRowMoreMenu = e => {
     if (!rowMoreMenu) return;
     if (rowMoreMenu.contains(e.target)) return;
     document.removeEventListener('click', hideRowMoreMenu);
     rowMoreMenu.hidden = true;
   };
-
-  const rowMenuButtons = document.querySelectorAll('.rowMenuButton');
-  rowMenuButtons.forEach(button => {
+  document.querySelectorAll('.rowMenuButton').forEach(button => {
     button.addEventListener('click', e => {
       if (rowMoreMenu?.hidden) {
         const rect = e.currentTarget.getBoundingClientRect();
         rowMoreMenu.style.top = `${rect.bottom + window.scrollY}px`;
         rowMoreMenu.style.left = `${rect.left + window.scrollX - 120}px`;
         rowMoreMenu.hidden = false;
-
         const downloadLink = rowMoreMenu.querySelector('#rowMoreMenuDownload');
         if (downloadLink) {
           downloadLink.onclick = () => {
-            window.open(
-              e.currentTarget?.dataset?.packageUrl,
-              '_blank'
-            );
+            window.open(e.currentTarget?.dataset?.packageUrl, '_blank');
           };
         }
-
         setTimeout(() => {
           document.addEventListener('click', hideRowMoreMenu);
         }, 1);
@@ -177,19 +168,12 @@ const setTheme = () => {};
     });
   });
 
+  // packageInfoModal 关闭
   if (packageInfoModal && packageInfoModalClose) {
-    packageInfoModalClose.addEventListener('click', () => {
-      closeDialog(packageInfoModal);
-    });
+    packageInfoModalClose.addEventListener('click', () => closeDialog(packageInfoModal));
   }
 
-  const modalControl = packageInfoModal?.shadowRoot?.querySelector('.control');
-  if (modalControl) {
-    modalControl.style.maxHeight = "90%";
-    modalControl.style.transition = 'height 0.2s ease-in-out';
-    modalControl.style.overflowY = 'hidden';
-  }
-
+  // 包信息填充
   const packageInfoName = document.getElementById('packageInfoName');
   const packageInfoId = document.getElementById('packageInfoId');
   const packageInfoVersion = document.getElementById('packageInfoVersion');
@@ -262,15 +246,12 @@ const setTheme = () => {};
 
       if (packageInfoModal) {
         openDialog(packageInfoModal);
-        setTimeout(() => {
-          if (!modalControl) return;
-          const height = packageInfoModal.querySelector('.col')?.clientHeight ?? 0;
-          modalControl.style.setProperty('--dialog-height', `${height + 14}px`);
-        }, 50);
+        // 无需设置对话框高度，因为现在由CSS自动适应
       }
     });
   });
 
+  // packageInfoVccUrlFieldCopy 复制
   const packageInfoVccUrlFieldCopy = document.getElementById('packageInfoVccUrlFieldCopy');
   if (packageInfoVccUrlFieldCopy) {
     packageInfoVccUrlFieldCopy.addEventListener('click', () => {
@@ -287,8 +268,6 @@ const setTheme = () => {};
   }
 
   if (packageInfoListingHelp && addListingToVccHelp) {
-    packageInfoListingHelp.addEventListener('click', () => {
-      openDialog(addListingToVccHelp);
-    });
+    packageInfoListingHelp.addEventListener('click', () => openDialog(addListingToVccHelp));
   }
 })();
