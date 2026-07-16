@@ -43,7 +43,27 @@ const setTheme = () => {
     console.warn('Theme initialization skipped:', err);
   }
 
-  // ----- 获取所有需要操作的 DOM 元素 -----
+  // ----- 工具函数：安全控制 dialog 显示/隐藏 -----
+  function openDialog(dialog) {
+    if (!dialog) return;
+    // 关闭所有其他 dialog
+    document.querySelectorAll('fluent-dialog').forEach(d => {
+      if (d !== dialog && d.open) {
+        d.open = false;
+      }
+    });
+    // 延迟一帧打开，避免焦点事件同步冲突
+    requestAnimationFrame(() => {
+      dialog.open = true;
+    });
+  }
+
+  function closeDialog(dialog) {
+    if (!dialog) return;
+    dialog.open = false;
+  }
+
+  // ----- 获取 DOM 元素 -----
   const packageGrid = document.getElementById('packageGrid');
   const searchInput = document.getElementById('searchInput');
   const urlBarHelpButton = document.getElementById('urlBarHelp');
@@ -57,7 +77,19 @@ const setTheme = () => {
   const packageInfoModalClose = document.getElementById('packageInfoModalClose');
   const packageInfoListingHelp = document.getElementById('packageInfoListingHelp');
 
-  // ----- 修改点 10：搜索功能仅在 packageGrid 和 searchInput 都存在时注册 -----
+  // ----- 为 tooltip 绑定 anchorElement（因为 HTML 中移除了 anchor 属性）-----
+  const publishedByTooltip = document.getElementById('publishedByTooltip');
+  const publishedByText = document.getElementById('publishedByText');
+  if (publishedByTooltip && publishedByText) {
+    publishedByTooltip.anchorElement = publishedByText;
+  }
+
+  const packageInfoListingTooltip = document.getElementById('packageInfoListingTooltip');
+  if (packageInfoListingTooltip && packageInfoListingHelp) {
+    packageInfoListingTooltip.anchorElement = packageInfoListingHelp;
+  }
+
+  // ----- 搜索功能 -----
   if (searchInput && packageGrid) {
     searchInput.addEventListener('input', ({ target: { value = '' } }) => {
       const items = packageGrid.querySelectorAll('fluent-data-grid-row[row-type="default"]');
@@ -78,21 +110,21 @@ const setTheme = () => {
     });
   }
 
-  // ----- 修改点 5：帮助按钮（显示弹窗）-----
+  // ----- 帮助按钮（打开 dialog）-----
   if (urlBarHelpButton && addListingToVccHelp) {
     urlBarHelpButton.addEventListener('click', () => {
-      addListingToVccHelp.hidden = false;
+      openDialog(addListingToVccHelp);
     });
   }
 
-  // ----- 修改点 6：帮助弹窗关闭按钮 -----
+  // ----- 帮助弹窗关闭按钮 -----
   if (addListingToVccHelpClose && addListingToVccHelp) {
     addListingToVccHelpClose.addEventListener('click', () => {
-      addListingToVccHelp.hidden = true;
+      closeDialog(addListingToVccHelp);
     });
   }
 
-  // ----- 修改点 1（已修复）+ 修改点 16：vccListingInfoUrlFieldCopy 复制按钮（添加 ?.）-----
+  // ----- vccListingInfoUrlFieldCopy 复制按钮 -----
   if (vccListingInfoUrlFieldCopy) {
     vccListingInfoUrlFieldCopy.addEventListener('click', () => {
       const vccUrlField = document.getElementById('vccListingInfoUrlField');
@@ -107,14 +139,14 @@ const setTheme = () => {
     });
   }
 
-  // ----- 修改点 7：VCC 添加仓库按钮 -----
+  // ----- VCC 添加仓库按钮 -----
   if (vccAddRepoButton) {
     vccAddRepoButton.addEventListener('click', () =>
       window.location.assign(`vcc://vpm/addRepo?url=${encodeURIComponent(LISTING_URL)}`)
     );
   }
 
-  // ----- 修改点 16：vccUrlFieldCopy 复制按钮（添加 ?.）-----
+  // ----- vccUrlFieldCopy 复制按钮 -----
   if (vccUrlFieldCopy) {
     vccUrlFieldCopy.addEventListener('click', () => {
       const vccUrlField = document.getElementById('vccUrlField');
@@ -129,7 +161,7 @@ const setTheme = () => {
     });
   }
 
-  // ----- 修改点 11 + 修改点 13 + 修改点 14 + 修改点 15：rowMoreMenu 相关逻辑 -----
+  // ----- rowMoreMenu 相关逻辑（修改点 11~15）-----
   const hideRowMoreMenu = e => {
     if (!rowMoreMenu) return;
     if (rowMoreMenu.contains(e.target)) return;
@@ -141,7 +173,6 @@ const setTheme = () => {
   rowMenuButtons.forEach(button => {
     button.addEventListener('click', e => {
       if (rowMoreMenu?.hidden) {
-        // 修改点 13：使用 currentTarget 获取坐标
         const rect = e.currentTarget.getBoundingClientRect();
         rowMoreMenu.style.top = `${rect.bottom + window.scrollY}px`;
         rowMoreMenu.style.left = `${rect.left + window.scrollX - 120}px`;
@@ -149,9 +180,7 @@ const setTheme = () => {
 
         const downloadLink = rowMoreMenu.querySelector('#rowMoreMenuDownload');
         if (downloadLink) {
-          // 修改点 15：直接使用 onclick 代替 addEventListener，避免移除问题
           downloadLink.onclick = () => {
-            // 修改点 14：使用 currentTarget 获取数据
             window.open(
               e.currentTarget?.dataset?.packageUrl,
               '_blank'
@@ -166,14 +195,14 @@ const setTheme = () => {
     });
   });
 
-  // ----- 修改点 8：packageInfoModal 关闭按钮 -----
+  // ----- packageInfoModal 关闭按钮 -----
   if (packageInfoModal && packageInfoModalClose) {
     packageInfoModalClose.addEventListener('click', () => {
-      packageInfoModal.hidden = true;
+      closeDialog(packageInfoModal);
     });
   }
 
-  // ----- 修改点 2（续）：安全访问 modalControl 并设置样式 -----
+  // ----- 设置 modalControl 样式（安全）-----
   const modalControl = packageInfoModal?.shadowRoot?.querySelector('.control');
   if (modalControl) {
     modalControl.style.maxHeight = "90%";
@@ -181,7 +210,7 @@ const setTheme = () => {
     modalControl.style.overflowY = 'hidden';
   }
 
-  // ----- 获取 packageInfo 弹窗内的元素 -----
+  // ----- 获取 packageInfo 弹窗内部元素 -----
   const packageInfoName = document.getElementById('packageInfoName');
   const packageInfoId = document.getElementById('packageInfoId');
   const packageInfoVersion = document.getElementById('packageInfoVersion');
@@ -192,18 +221,15 @@ const setTheme = () => {
   const packageInfoLicense = document.getElementById('packageInfoLicense');
 
   // ----- 行内按钮：添加到 VCC -----
-  const rowAddToVccButtons = document.querySelectorAll('.rowAddToVccButton');
-  rowAddToVccButtons.forEach((button) => {
+  document.querySelectorAll('.rowAddToVccButton').forEach((button) => {
     button.addEventListener('click', () =>
       window.location.assign(`vcc://vpm/addRepo?url=${encodeURIComponent(LISTING_URL)}`)
     );
   });
 
   // ----- 行内按钮：查看包信息（修改点 12、17、18）-----
-  const rowPackageInfoButton = document.querySelectorAll('.rowPackageInfoButton');
-  rowPackageInfoButton.forEach((button) => {
+  document.querySelectorAll('.rowPackageInfoButton').forEach((button) => {
     button.addEventListener('click', e => {
-      // 修改点 12：使用 currentTarget 获取 dataset
       const packageId = e.currentTarget?.dataset?.packageId;
       const packageInfo = PACKAGES?.[packageId];
       if (!packageInfo) {
@@ -221,7 +247,7 @@ const setTheme = () => {
         packageInfoAuthor.href = packageInfo.author.url;
       }
 
-      // 修改点 17：关键词遍历防御
+      // 关键词
       if (packageInfoKeywords) {
         const keywords = packageInfo.keywords ?? [];
         if (keywords.length === 0) {
@@ -249,7 +275,7 @@ const setTheme = () => {
         }
       }
 
-      // 修改点 18：依赖遍历防御
+      // 依赖项
       if (packageInfoDependencies) {
         packageInfoDependencies.innerHTML = null;
         const deps = packageInfo.dependencies ?? {};
@@ -261,21 +287,20 @@ const setTheme = () => {
         });
       }
 
-      // 显示弹窗
+      // 显示弹窗（使用工具函数）
       if (packageInfoModal) {
-        packageInfoModal.hidden = false;
-
-        // 安全设置对话框高度
+        openDialog(packageInfoModal);
+        // 设置高度（稍后执行）
         setTimeout(() => {
           if (!modalControl) return;
           const height = packageInfoModal.querySelector('.col')?.clientHeight ?? 0;
           modalControl.style.setProperty('--dialog-height', `${height + 14}px`);
-        }, 1);
+        }, 50);
       }
     });
   });
 
-  // ----- 修改点 4 + 修改点 16：packageInfoVccUrlFieldCopy 复制按钮（添加 ?.）-----
+  // ----- packageInfoVccUrlFieldCopy 复制按钮 -----
   const packageInfoVccUrlFieldCopy = document.getElementById('packageInfoVccUrlFieldCopy');
   if (packageInfoVccUrlFieldCopy) {
     packageInfoVccUrlFieldCopy.addEventListener('click', () => {
@@ -291,10 +316,10 @@ const setTheme = () => {
     });
   }
 
-  // ----- 修改点 9：弹窗内的帮助链接 -----
+  // ----- 弹窗内的帮助链接 -----
   if (packageInfoListingHelp && addListingToVccHelp) {
     packageInfoListingHelp.addEventListener('click', () => {
-      addListingToVccHelp.hidden = false;
+      openDialog(addListingToVccHelp);
     });
   }
 })();
