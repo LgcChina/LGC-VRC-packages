@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VCC 列表</title>
+  <!-- 锁定 Fluent UI 版本 -->
   <script type="module" src="https://unpkg.com/@fluentui/web-components@2.6.0"></script>
   <link rel="stylesheet" href="styles.css?v=20260716">
 </head>
 <body>
   <div class="col align-items-center content">
-    <!-- 头部信息（不变） -->
+    <!-- 头部信息 -->
     <div id="listingInfo" class="col mb-4 w-100 align-items-center">
       {{~ if listingInfo.BannerImage; ~}}
         <div class="bannerImage" style="background-image: url({{ listingInfo.BannerImageUrl }})"></div>
@@ -31,7 +32,7 @@
       </div>
     </div>
 
-    <!-- 添加VCC区块（不变） -->
+    <!-- 添加VCC区块 -->
     <div class="addToVccBlock mt-4 row align-items-center">
       <fluent-text-field aria-readonly="true" id="vccUrlField" class="vccUrlField" readonly value="{{ listingInfo.Url }}"></fluent-text-field>
       <fluent-button appearance="accent" class="ms-2" id="vccAddRepoButton">添加到VCC</fluent-button>
