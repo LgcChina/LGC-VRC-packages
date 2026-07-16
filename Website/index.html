@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VCC 列表</title>
-  <!-- 修改点1：锁定 Fluent UI Web Components 版本，避免因更新导致的不兼容 -->
+  <!-- 锁定版本，避免意外更新 -->
   <script type="module" src="https://unpkg.com/@fluentui/web-components@2.6.0"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -22,7 +22,7 @@
       {{~ end; ~}}
       <div class="col align-items-center">
         {{~ if listingInfo.Author.Email; ~}}
-        <!-- 修改点2：移除 anchor 属性，改为在 JS 中通过 anchorElement 绑定 -->
+        <!-- 移除 anchor，改为 JS 绑定 -->
         <fluent-tooltip id="publishedByTooltip">
           {{ listingInfo.Author.Email }}
         </fluent-tooltip>
@@ -54,8 +54,8 @@
         </svg>
       </fluent-button>
     </div>
-    <!-- 修改点3：将 hidden 改为 open="false"，使用 open 属性控制显示 -->
-    <fluent-dialog id="addListingToVccHelp" open="false" modal trap-focus>
+    <!-- 已删除 trap-focus 和 open="false" -->
+    <fluent-dialog id="addListingToVccHelp" modal>
       <div class="col ps-4 pe-4">
         <div class="row align-items-center justify-content-between mt-3 mb-4">
           <div class="row align-items-center">
@@ -109,8 +109,8 @@
         </div>
       </fluent-menu-item>
     </fluent-menu>
-    <!-- 修改点3：将 hidden 改为 open="false" -->
-    <fluent-dialog id="packageInfoModal" open="false" modal>
+    <!-- 已删除 trap-focus 和 open="false" -->
+    <fluent-dialog id="packageInfoModal" modal>
       <div class="col ps-4 pe-4">
         <div class="row align-items-center justify-content-between mt-3 mb-4">
           <div class="col">
@@ -160,7 +160,7 @@
             </svg>
             复制
           </fluent-button>
-          <!-- 修改点2：移除 anchor 属性 -->
+          <!-- 移除 anchor，改为 JS 绑定 -->
           <fluent-tooltip id="packageInfoListingTooltip">
             如何将列表添加到您的VCC
           </fluent-tooltip>
