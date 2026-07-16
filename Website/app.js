@@ -43,7 +43,7 @@ const setTheme = () => {
     console.warn('Theme initialization skipped:', err);
   }
 
-  // ----- 工具函数：安全控制 dialog 显示/隐藏 -----
+  // ----- 工具函数：安全控制 dialog 显示/隐藏（已移除 requestAnimationFrame）-----
   function openDialog(dialog) {
     if (!dialog) return;
     // 关闭所有其他 dialog
@@ -52,10 +52,8 @@ const setTheme = () => {
         d.open = false;
       }
     });
-    // 延迟一帧打开，避免焦点事件同步冲突
-    requestAnimationFrame(() => {
-      dialog.open = true;
-    });
+    // 直接同步打开，避免延迟导致焦点冲突
+    dialog.open = true;
   }
 
   function closeDialog(dialog) {
