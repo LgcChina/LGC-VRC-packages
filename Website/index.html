@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VCC 列表</title>
-  <script type="module" src="https://unpkg.com/@fluentui/web-components"></script>
+  <!-- 修改点1：锁定 Fluent UI Web Components 版本，避免因更新导致的不兼容 -->
+  <script type="module" src="https://unpkg.com/@fluentui/web-components@2.6.0"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -21,7 +22,8 @@
       {{~ end; ~}}
       <div class="col align-items-center">
         {{~ if listingInfo.Author.Email; ~}}
-        <fluent-tooltip id="publishedByTooltip" anchor="publishedByText">
+        <!-- 修改点2：移除 anchor 属性，改为在 JS 中通过 anchorElement 绑定 -->
+        <fluent-tooltip id="publishedByTooltip">
           {{ listingInfo.Author.Email }}
         </fluent-tooltip>
         {{~ end; ~}}
@@ -52,7 +54,8 @@
         </svg>
       </fluent-button>
     </div>
-    <fluent-dialog id="addListingToVccHelp" hidden modal trap-focus>
+    <!-- 修改点3：将 hidden 改为 open="false"，使用 open 属性控制显示 -->
+    <fluent-dialog id="addListingToVccHelp" open="false" modal trap-focus>
       <div class="col ps-4 pe-4">
         <div class="row align-items-center justify-content-between mt-3 mb-4">
           <div class="row align-items-center">
@@ -106,7 +109,8 @@
         </div>
       </fluent-menu-item>
     </fluent-menu>
-    <fluent-dialog id="packageInfoModal" hidden modal>
+    <!-- 修改点3：将 hidden 改为 open="false" -->
+    <fluent-dialog id="packageInfoModal" open="false" modal>
       <div class="col ps-4 pe-4">
         <div class="row align-items-center justify-content-between mt-3 mb-4">
           <div class="col">
@@ -156,7 +160,8 @@
             </svg>
             复制
           </fluent-button>
-          <fluent-tooltip id="packageInfoListingTooltip" anchor="packageInfoListingHelp">
+          <!-- 修改点2：移除 anchor 属性 -->
+          <fluent-tooltip id="packageInfoListingTooltip">
             如何将列表添加到您的VCC
           </fluent-tooltip>
           <fluent-button id="packageInfoListingHelp" class="ms-2">
