@@ -108,7 +108,7 @@ const setTheme = () => {};
     addListingToVccHelpClose.addEventListener('click', () => closeDialog(addListingToVccHelp));
   }
 
-  // 复制按钮
+  // 复制按钮（vccListingInfoUrlFieldCopy）
   if (vccListingInfoUrlFieldCopy) {
     vccListingInfoUrlFieldCopy.addEventListener('click', () => {
       const vccUrlField = document.getElementById('vccListingInfoUrlField');
@@ -246,12 +246,11 @@ const setTheme = () => {};
 
       if (packageInfoModal) {
         openDialog(packageInfoModal);
-        // 无需设置对话框高度，因为现在由CSS自动适应
       }
     });
   });
 
-  // packageInfoVccUrlFieldCopy 复制
+  // packageInfoVccUrlFieldCopy
   const packageInfoVccUrlFieldCopy = document.getElementById('packageInfoVccUrlFieldCopy');
   if (packageInfoVccUrlFieldCopy) {
     packageInfoVccUrlFieldCopy.addEventListener('click', () => {
